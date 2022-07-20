@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _value = 10.0;
   // Initial Selected Value
-   String? dropdownvalue;
+  String? dropdownvalue;
 
   // List of items in our dropdown menu
   var items = [
@@ -37,10 +40,31 @@ class _HomePageState extends State<HomePage> {
     'Item 4',
     'Item 5',
   ];
-  bool checked = false ;
+  bool checked = false;
   bool fades = false;
   bool switchs = false;
-  bool animatedContainer = false ;
+  bool animatedContainer = false;
+
+  DateTime? dateTime;
+  TimeOfDay? timeOfDay;
+
+  void getDates() async {
+    DateTime? date = await showDatePicker(
+        context: context,
+        initialDate: DateTime(DateTime.now().day),
+        firstDate: DateTime(DateTime.now().day),
+        lastDate: DateTime(DateTime.now().year +6));
+    setState(() {
+      dateTime = date ;
+    });
+  }
+
+  void getTimes() async{
+    TimeOfDay? time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    setState(() {
+      timeOfDay = time ;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +74,8 @@ class _HomePageState extends State<HomePage> {
         title: Text("Flutter widgets"),
       ),
       body: Container(
-
         child: SingleChildScrollView(
           child: Column(
-
             children: [
               //flutter snack
               Builder(builder: (BuildContext con) {
@@ -135,15 +157,15 @@ class _HomePageState extends State<HomePage> {
                             child: Text(items),
                           );
                         }).toList()
-                      : null
-                  ),
+                      : null),
               ListView.builder(
                   itemCount: 2,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   physics: ScrollPhysics(),
-                  itemBuilder: (context,i){
-                    return Dismissible(key: UniqueKey(),
+                  itemBuilder: (context, i) {
+                    return Dismissible(
+                        key: UniqueKey(),
                         direction: DismissDirection.horizontal,
                         // shrinkWrap: true,
                         background: Container(
@@ -153,79 +175,126 @@ class _HomePageState extends State<HomePage> {
                         onDismissed: (direction) {
                           print(direction);
                         },
-                        child:  ListTile(
+                        child: ListTile(
                           title: Text("title"),
                           subtitle: Text("this is subtitle"),
                         ));
-              }),
+                  }),
               Container(
                 alignment: Alignment.topLeft,
-                child: Checkbox(value: checked, onChanged: (e){
-                  setState(() {
-                    checked = e! ;
-                  });
-                }),
+                child: Checkbox(
+                    value: checked,
+                    onChanged: (e) {
+                      setState(() {
+                        checked = e!;
+                      });
+                    }),
               ),
-              AnimatedCrossFade(firstChild: Container(
-                height: 50,
-                color: Colors.orange,
-                child:ElevatedButton(
-                  onPressed: (){
+              AnimatedCrossFade(
+                  firstChild: Container(
+                    height: 50,
+                    color: Colors.orange,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          fades = true;
+                        });
+                      },
+                      child: Text("click"),
+                    ),
+                  ),
+                  secondChild: Container(
+                    height: 50,
+                    // color: Colors.green,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          fades = false;
+                        });
+                      },
+                      child: Text("Welcome"),
+                    ),
+                  ),
+                  crossFadeState: fades
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  duration: Duration(seconds: 1)),
+              Switch(
+                  value: switchs,
+                  onChanged: (e) {
                     setState(() {
-                      fades = true ;
+                      switchs = e;
                     });
-                  },
-                  child: Text("click"),
-                ) ,
-              ), secondChild:  Container(
-                height: 50,
-                // color: Colors.green,
-                child:ElevatedButton(
-                  onPressed: (){
-                    setState(() {
-                      fades = false ;
-                    });
-                  },
-                  child: Text("Welcome"),
-                ) ,
-              ), crossFadeState:fades?CrossFadeState.showSecond : CrossFadeState.showFirst , duration: Duration(seconds: 1)),
-              Switch(value: switchs, onChanged: (e){
-                setState(() {
-                  switchs = e;
-                });
-              }),
+                  }),
               AnimatedContainer(
-                  height:animatedContainer ? 150:100,
-                  width: animatedContainer ? 150:100,
-                  color:animatedContainer ? Colors.green : Colors.orange,
+                  height: animatedContainer ? 150 : 100,
+                  width: animatedContainer ? 150 : 100,
+                  color: animatedContainer ? Colors.green : Colors.orange,
                   duration: Duration(seconds: 1)),
               RaisedButton(
                   child: Text("animated container"),
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
                       animatedContainer = !animatedContainer;
                     });
                   }),
-              ExpansionTile(title: Text("title"),subtitle: Text("subtitle"),leading: Icon(Icons.account_balance),
-              children: [
-                Container(
-                  height: 50,
-                  color: Colors.orange,
-                )
-              ],
+              ExpansionTile(
+                title: Text("title"),
+                subtitle: Text("subtitle"),
+                leading: Icon(Icons.account_balance),
+                children: [
+                  Container(
+                    height: 50,
+                    color: Colors.orange,
+                  )
+                ],
               ),
               Tooltip(
                 message: "this is icon",
                 child: Icon(Icons.account_balance),
               ),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: 150,
+                    width: 150,
+                    color: Colors.orange,
+                    child: Text("Back drop filter"),
+                  ),
+                  // BackdropFilter(filter: ImageFilter.blur(sigmaX: 5,sigmaY: 10,tileMode: TileMode.clamp), child: Container(),)
+                ],
+              ),
+              DateTimePicker(
+                // type: DateTimePickerType.dateTimeSeparate,
+                type: DateTimePickerType.date,
+
+                dateMask: 'd MMM, yyyy',
+                initialValue: DateTime.now().toString(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+                onChanged: (val) => print(val),
+                onSaved: (val) => print(val),
+              ),
+              Text(dateTime == '' || dateTime == null ? "choose date" : dateTime.toString()),
+              Text(timeOfDay == '' || timeOfDay == null ? "choose time" :  timeOfDay.toString()),
+              RaisedButton(
+                  child: Text("GetDate"),
+                  onPressed: () {
+                    getDates();
+                  }),
+              RaisedButton(
+                  child: Text("GetTimes"),
+                  onPressed: () {
+                    getTimes();
+                  }),
 
 
 
-
-
-
-              SizedBox(height: 100,),
-
+              SizedBox(
+                height: 100,
+              ),
             ],
           ),
         ),

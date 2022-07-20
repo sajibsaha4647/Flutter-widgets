@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   fluttertoast: ^8.0.9
+  date_time_picker: "^2.1.0"
   flutter:
     sdk: flutter
 
