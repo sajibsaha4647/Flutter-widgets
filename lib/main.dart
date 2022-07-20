@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
@@ -53,16 +54,17 @@ class _HomePageState extends State<HomePage> {
         context: context,
         initialDate: DateTime(DateTime.now().day),
         firstDate: DateTime(DateTime.now().day),
-        lastDate: DateTime(DateTime.now().year +6));
+        lastDate: DateTime(DateTime.now().year + 6));
     setState(() {
-      dateTime = date ;
+      dateTime = date;
     });
   }
 
-  void getTimes() async{
-    TimeOfDay? time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  void getTimes() async {
+    TimeOfDay? time =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
     setState(() {
-      timeOfDay = time ;
+      timeOfDay = time;
     });
   }
 
@@ -277,8 +279,12 @@ class _HomePageState extends State<HomePage> {
                 onChanged: (val) => print(val),
                 onSaved: (val) => print(val),
               ),
-              Text(dateTime == '' || dateTime == null ? "choose date" : dateTime.toString()),
-              Text(timeOfDay == '' || timeOfDay == null ? "choose time" :  timeOfDay.toString()),
+              Text(dateTime == '' || dateTime == null
+                  ? "choose date"
+                  : dateTime.toString()),
+              Text(timeOfDay == '' || timeOfDay == null
+                  ? "choose time"
+                  : timeOfDay.toString()),
               RaisedButton(
                   child: Text("GetDate"),
                   onPressed: () {
@@ -289,8 +295,70 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     getTimes();
                   }),
-
-
+              SizedBox(
+                height: 40,
+              ),
+              Transform.rotate(
+                angle: pi / 9,
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(
+                height: 70,
+              ),
+              Transform.scale(
+                scale: 1.1,
+                child: Container(
+                  height: 150,
+                  width: 150,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(
+                height: 70,
+              ),
+              Transform.translate(
+                offset: Offset(50, 100),
+                child: Container(
+                  height: 150,
+                  width: 150,
+                  color: Colors.green,
+                ),
+              ),
+              DataTable(columns: [
+                DataColumn(label: Text("Name"), tooltip: "name"),
+                DataColumn(label: Text("Age"), tooltip: "age"),
+                DataColumn(label: Text("School"), tooltip: "school"),
+                DataColumn(label: Text("Edit"), tooltip: "edit"),
+              ], rows: [
+                DataRow(cells: [
+                  DataCell(Text("sajib")),
+                  DataCell(Text("29")),
+                  DataCell(Text("bdtask accademy")),
+                  DataCell(Icon(Icons.account_balance))
+                ]),
+                DataRow(cells: [
+                  DataCell(Text("sajib")),
+                  DataCell(Text("29")),
+                  DataCell(Text("bdtask accademy")),
+                  DataCell(Icon(Icons.account_balance))
+                ]),
+                DataRow(cells: [
+                  DataCell(Text("sajib")),
+                  DataCell(Text("29")),
+                  DataCell(Text("bdtask accademy")),
+                  DataCell(Icon(Icons.account_balance))
+                ]),
+                DataRow(cells: [
+                  DataCell(Text("sajib")),
+                  DataCell(Text("29")),
+                  DataCell(Text("bdtask accademy")),
+                  DataCell(Icon(Icons.account_balance))
+                ]),
+              ]),
 
               SizedBox(
                 height: 100,
